@@ -5,6 +5,7 @@ import com.example.workoutmate.domain.board.dto.BoardResponseDto;
 import com.example.workoutmate.domain.board.dto.PopularBoardDto;
 import com.example.workoutmate.domain.board.dto.BoardSportTypeResponseDto;
 import com.example.workoutmate.domain.board.entity.SportType;
+import com.example.workoutmate.domain.board.enums.SearchType;
 import com.example.workoutmate.domain.board.service.BoardPopularityService;
 import com.example.workoutmate.domain.board.service.BoardService;
 import com.example.workoutmate.global.config.CustomUserPrincipal;
@@ -139,5 +140,17 @@ public class BoardController {
         List<PopularBoardDto> popularBoards = boardPopularityService.
                 getPopularBoardsFromCache();
         return ApiResponse.success(HttpStatus.OK, "인기 게시글이 성공적으로 조회되었습니다.", popularBoards);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<Page<BoardResponseDto>>> searchBoards(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "ALL") SearchType searchType,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            ){
+
+        Page<BoardResponseDto> responseDto = boardService.searchBoards(keyword, searchType, pageable);
+
+        return ApiResponse.success(HttpStatus.OK, "게시글 검색이 되었습니다.", responseDto);
     }
 }

@@ -6,6 +6,7 @@ import com.example.workoutmate.domain.board.dto.BoardSportTypeResponseDto;
 import com.example.workoutmate.domain.board.entity.Board;
 import com.example.workoutmate.domain.board.entity.BoardMapper;
 import com.example.workoutmate.domain.board.entity.SportType;
+import com.example.workoutmate.domain.board.enums.SearchType;
 import com.example.workoutmate.domain.board.repository.BoardRepository;
 import com.example.workoutmate.domain.follow.service.FollowService;
 import com.example.workoutmate.domain.participation.service.ParticipationCreateService;
@@ -178,6 +179,13 @@ public class BoardService {
                 .collect(Collectors.toList());
 
         return new BoardSportTypeResponseDto(sportTypes);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BoardResponseDto> searchBoards(String keyword, SearchType searchType, Pageable pageable) {
+        Page<Board> responseDto = boardRepository.searchBoards(keyword, searchType, pageable);
+
+        return boardViewCountService.toDtoPage(responseDto);
     }
 
     // 내가 작성하지 않고 삭제되지 않은 게시글 찾기

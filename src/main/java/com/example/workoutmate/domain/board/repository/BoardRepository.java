@@ -16,8 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, BoardRepositoryCustom{
 
     // 게시글 단건 조회
     Optional<Board> findByIdAndIsDeletedFalse(Long id);
