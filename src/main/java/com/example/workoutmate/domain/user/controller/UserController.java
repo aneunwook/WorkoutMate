@@ -26,6 +26,14 @@ public class UserController {
 
     private final UserService userService;
 
+    // 유저 상제 정보 조회
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ApiResponse<UserInfoResponseDto>> userGetInfo(@PathVariable Long userId){
+
+        UserInfoResponseDto userInfoResponseDto = userService.userGetInfo(userId);
+
+        return ApiResponse.success(HttpStatus.OK, "유저 정보 조회가 완료되었습니다.", userInfoResponseDto);
+    }
 
     /**
      * 유저 정보 조회 (마이페이지)

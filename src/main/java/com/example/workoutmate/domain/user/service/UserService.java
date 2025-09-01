@@ -42,6 +42,17 @@ public class UserService {
     private final BoardPopularityService popularityService;
     private final BoardViewCountService boardViewCountService;
 
+    // 유저 상제 정보 조회
+    public UserInfoResponseDto userGetInfo(Long userId) {
+        User user = findById(userId);
+
+        int followerCount = followCountService.countByFollowingId(user.getId());
+        int followingCount = followCountService.countByFollowerId(user.getId());
+        int myBoardCount = boardSearchService.countBoardsByWriter(user.getId());
+
+        return UserMapper.toUserInfoResponseDto(user, followerCount, followingCount, myBoardCount);
+    }
+
     /**
      * 유저 정보 조회 (마이페이지)
      *
@@ -119,7 +130,6 @@ public class UserService {
     }
 
     /* 도메인 관련 메서드 */
-
     public User findById(Long id) {
         return userRepository.findByIdAndIsDeletedFalseAndIsEmailVerifiedTrue(id).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
@@ -129,4 +139,6 @@ public class UserService {
         return userRepository.findByEmailAndIsDeletedFalseAndIsEmailVerifiedTrue(email).orElseThrow(
                 () -> new CustomException(USER_NOT_FOUND, USER_NOT_FOUND.getMessage()));
     }
+
+
 }
